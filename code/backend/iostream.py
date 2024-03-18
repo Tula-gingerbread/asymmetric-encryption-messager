@@ -36,6 +36,7 @@ class IOStream:
         for message_id, payload in content.items():
             print(f'ID: {message_id}; User: {payload["user"]}; Time: {payload["time"]}. Content:\n{payload["content"]}\n')
 
+        os.remove('messages.json')
         return content
     
     def put(self, message: str) -> None:
