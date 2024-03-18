@@ -1,4 +1,4 @@
-# asymmetric-encryption-messager
+# sftp-messager
 Just my tries, don't try understand this
 Based on SFTP protocol.
 
