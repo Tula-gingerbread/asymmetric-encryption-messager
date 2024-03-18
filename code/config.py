@@ -7,30 +7,36 @@
 # if your SSH config exists - write hostname from it here. or set it to None or '' to use creditals below
 sshconfig_hostname = None
 
-# SFTP server name
-sftpserver_hostname = 'localhost'   # str (string)
-# SFTP server username
-sftpserver_user = 'nobody'          # str 
-# SFTP server port (same for SSH)
-sftpserver_port = 22                # int (intiger)
+# SFTP server name. Must be string
+sftpserver_hostname = 'localhost'
+# SFTP server username. Must be string
+sftpserver_user = 'nobody'
+# SFTP server port (same for SSH). Must be intiger from 1 to 65535
+sftpserver_port = 22
 
 
 
 ### MESSAGER CREDITALS ###
-messager_username = 'Mama-ama-criminal'   # str
+# Your username. Must be string
+messager_username = 'Mama-ama-criminal'
 
 
 
-
-### ----- don't touch! it check is config valid ----- ###
-if hostname:
-    assert isinstance(sshconfig_hostname, (str, None))
+### ----- Don't touch! It check is config valid ----- ###
+if sshconfig_hostname:
+    assert isinstance(sshconfig_hostname, str|None), 'SSH config hostname'
 else:
-    assert isinstance(sftpserver_hostname, str)
-    assert isinstance(sftpserver_user, str)
-    assert isinstance(sftpserver_port, int)
+    assert isinstance(sftpserver_hostname, str), f'SFTP Hostname. Must be str, but get {type(sftpserver_hostname)}'
+    assert isinstance(sftpserver_user, str), f'SFTP User. Must be str, but get {type(sftpserver_user)}'
+    assert isinstance(sftpserver_port, int), f'SFTP Port. Must be int from 1 to 65535, but get {type(sftpserver_port)}'
 
-    assert sftpserver_port > 1
-    assert sftpserver_port < 65535
+    assert sftpserver_port >= 1, 'SFTP Port. Must be int from 1 to 65535'
+    assert sftpserver_port <= 65535, 'SFTP Port. Must be int from 1 to 65535'
 
-assert isinstance(messager_username, str)
+    sftpserver_port = str(sftpserver_port)
+
+assert isinstance(messager_username, str), f'Messager username must be str, but get {type(messager_username)}'
+
+
+if __name__ == '__main__':
+    print('Config is valid.')
