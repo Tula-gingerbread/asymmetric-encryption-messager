@@ -2,6 +2,8 @@
 
 import subprocess
 import json
+from datetime import datetime
+import os
 import config
 
 class IOStream:
@@ -14,13 +16,45 @@ class IOStream:
                 ]
 
     def get(self, need_print: bool=True) -> dict:
-        subprocess.call(['echo', 'get messages.json', '|'].extend(self.sftp_command_conf))
+        command = ['echo', 'get messages.json', '|']
+        command.extend(self.sftp_command_conf)
+        subprocess.call(command, shell=True)
 
-        with open('messages.json', 'r', encoding='utf-8') as file:
-            content = json.load(fp=file)
+        if os.path.exists('./messages.json'):
+            with open('messages.json', 'r', encoding='utf-8') as file:
+                content = json.load(fp=file)
+        else:
+            if need_print:
+                print('Check your server config and is it avaible')
+            return
 
-        for message_id in content: pass
+        if not need_print:
+            return content
+        elif not content:
+            print('No messages here.')
+            return content
+
+        for message_id, payload in content.items():
+            print(f'ID: {message_id}; User: {payload["user"]}; Time: {payload["time"]}. Content:\n{payload["content"]}\n')
+
+        return content
     
-    def put(self, content: str) -> None:
+    def put(self, message: str) -> None:
         content = self.get(need_print=False)
         
+        payload = {
+            "user": config.messager_username,
+            "time": datetime.now().strftime('%d.%m.%Y %H:%M'),
+            "content": message
+        }
+        
+        if not content:
+            content['1'] = payload
+        else:
+            content[str( int(list(content)[-1]) + 1 )] = payload
+        with open('messages.json', 'w', encoding='utf-8') as file:
+            json.dump(content, file, indent=4)
+        
+        command = ['echo', 'put messages.json', '|']
+        command.extend(self.sftp_command_conf)
+        subprocess.call(command, shell=True)
