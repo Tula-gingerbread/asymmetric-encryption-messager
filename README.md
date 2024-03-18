@@ -14,7 +14,9 @@ Okay, how use it:
 
     2.1. To check config - run it by python interpreter
 
-I've only tested this on Linux/GNU. 
-I can't be sure that this will work on other systems. 
+- Linux/GNU: works.
+- Termux (Android): not work.
+I can't be sure that this will work on other systems.
+
 
 P.s.: I use Arch btw
