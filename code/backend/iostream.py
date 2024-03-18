@@ -17,12 +17,6 @@ class IOStream:
 
         self.sftp_proc = subprocess.Popen(sftp_command_conf, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    # def __del__(self):
-    #     self.sftp_proc.terminate()
-    #     time.sleep(0.33)
-    #     if self.sftp_proc.poll() is None: 
-    #         self.sftp_proc.kill()
-
     def get(self, need_print: bool=True) -> dict:
         self.sftp_proc.stdin.write('get messages.json'.encode())
         if os.path.exists('./messages.json'):
