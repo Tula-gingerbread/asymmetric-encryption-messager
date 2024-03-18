@@ -16,6 +16,7 @@ Okay, how use it:
 
 - Linux/GNU: works.
 - Termux (Android): not work.
+
 I can't be sure that this will work on other systems.
 
 
