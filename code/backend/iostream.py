@@ -9,17 +9,22 @@ import config
 class IOStream:
     def __init__(self):
         if config.sshconfig_hostname:
-            self.sftp_command_conf = ['sftp', config.sshconfig_hostname]
+            sftp_command_conf = ['sftp', config.sshconfig_hostname]
         else:
-            self.sftp_command_conf = [
+            sftp_command_conf = [
                 'sftp', '-p', config.sftpserver_port, f'{config.sftpserver_user}@{config.sftpserver_hostname}'
                 ]
 
-    def get(self, need_print: bool=True) -> dict:
-        command = ['echo', 'get messages.json', '|']
-        command.extend(self.sftp_command_conf)
-        subprocess.call(command, shell=True)
+        self.sftp_proc = subprocess.Popen(sftp_command_conf, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+    # def __del__(self):
+    #     self.sftp_proc.terminate()
+    #     time.sleep(0.33)
+    #     if self.sftp_proc.poll() is None: 
+    #         self.sftp_proc.kill()
+
+    def get(self, need_print: bool=True) -> dict:
+        self.sftp_proc.stdin.write('get messages.json'.encode())
         if os.path.exists('./messages.json'):
             with open('messages.json', 'r', encoding='utf-8') as file:
                 content = json.load(fp=file)
@@ -55,6 +60,4 @@ class IOStream:
         with open('messages.json', 'w', encoding='utf-8') as file:
             json.dump(content, file, indent=4)
         
-        command = ['echo', 'put messages.json', '|']
-        command.extend(self.sftp_command_conf)
-        subprocess.call(command, shell=True)
+        self.sftp_proc.stdin.write('get messages.json'.encode())

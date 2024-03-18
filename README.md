@@ -10,6 +10,11 @@ Okay, how use it:
 
     1.2. In user home directory must exist `messages.json` file with content `{}`
 
-2. Set up config.py
+2. Setup config.py
 
-    2.1. To check config - run it by python interpritator
+    2.1. To check config - run it by python interpreter
+
+I've only tested this on Linux/GNU. 
+I can't be sure that this will work on other systems. 
+
+P.s.: I use Arch btw
