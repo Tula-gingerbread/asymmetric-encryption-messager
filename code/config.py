@@ -5,7 +5,7 @@
 
 ### SERVER LOGIN CREDITALS ###
 # if your SSH config exists - write hostname from it here. or set it to None or '' to use creditals below
-sshconfig_hostname = 'enigma'
+sshconfig_hostname = None
 
 # SFTP server name. Must be string
 sftpserver_hostname = 'localhost'
