@@ -1,7 +1,7 @@
 # sftp-messager
 Just my tries, don't try understand this
 
-Based on SFTP protocol.
+Based on OpenSSH SFTP protocol. 
 
 Okay, how use it:
 1. Make SFTP server.
