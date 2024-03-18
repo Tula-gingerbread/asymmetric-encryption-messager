@@ -3,28 +3,33 @@
 import subprocess
 import json
 from datetime import datetime
+import time
 import os
 import config
 
 class IOStream:
     def __init__(self):
         if config.sshconfig_hostname:
-            sftp_command_conf = ['sftp', config.sshconfig_hostname]
+            self.sftp_command_conf = ['sftp', config.sshconfig_hostname]
         else:
-            sftp_command_conf = [
+            self.sftp_command_conf = [
                 'sftp', '-p', config.sftpserver_port, f'{config.sftpserver_user}@{config.sftpserver_hostname}'
                 ]
 
-        self.sftp_proc = subprocess.Popen(sftp_command_conf, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # self.sftp_proc = subprocess.Popen(['sftp', 'enigma'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
 
     def get(self, need_print: bool=True) -> dict:
-        self.sftp_proc.stdin.write('get messages.json'.encode())
+        sftp_proc = subprocess.Popen(['sftp', 'enigma'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sftp_proc.stdin.write('get messages.json'.encode())
+        sftp_proc.communicate()
+        del sftp_proc
+
         if os.path.exists('./messages.json'):
             with open('messages.json', 'r', encoding='utf-8') as file:
                 content = json.load(fp=file)
         else:
-            if need_print:
-                print('Check your server config and is it avaible')
+            print('Check your server config and is it avaible')
             return
 
         if not need_print:
@@ -55,4 +60,7 @@ class IOStream:
         with open('messages.json', 'w', encoding='utf-8') as file:
             json.dump(content, file, indent=4)
         
-        self.sftp_proc.stdin.write('get messages.json'.encode())
+        sftp_proc = subprocess.Popen(['sftp', 'enigma'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sftp_proc.stdin.write('put messages.json'.encode())
+        sftp_proc.communicate()
+        del sftp_proc
